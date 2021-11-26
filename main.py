@@ -38,6 +38,10 @@ if __name__ == '__main__':
     logging.basicConfig()
     count = 0
 
+    # add opening bracket
+    with open("output.json", "a") as thefile:
+        thefile.write("[")
+        
     # count branches
     for z in data:
         if (z['type'] == 'bank') | (z['type'] == 'branch'):

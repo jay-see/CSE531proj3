@@ -28,6 +28,8 @@ class Customer:
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
         print ("Executing events.." + self.events)
+        msg = " {\n \"id\": " + str(self.id) + ", \"balance\": "
+                
         newevents = self.events.replace("\'", "\"")
         eventslist = json.loads(newevents)
 
@@ -37,5 +39,5 @@ class Customer:
             branchid = x['dest']
             print (singleevent)
             response = self.stubList[branchid-1].MsgDelivery(bankworld_pb2.BranchRequest(msg=singleevent))
-
-        return (response.branch_msg)
+        msg += response.branch_msg + "\n },"
+        return (msg)
