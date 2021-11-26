@@ -92,24 +92,16 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
 
     # parse the message received from customer and call appropriate branch routines
     def MsgDelivery(self, request, context):
-#        branchmsg = "{\"id\": " + str(self.id) + ", \"recv\": [{\"interface\": "
         branchmsg = ""
-#        self.recvMsg.append(request.msg)
         request.msg = request.msg.replace("\'", "\"")
 
         i = json.loads(request.msg)
-#        for i in reqmsg:
         if i['interface'] == 'deposit':
-#            branchmsg = branchmsg + "\"deposit\", \"result\": "
             result = Branch.Deposit(self,i['money'])
-#            branchmsg = branchmsg + "\"" + result + "\"}, {\"interface\": "
         elif i['interface'] == 'withdraw':
-#            branchmsg = branchmsg + "\"withdraw\", \"result\": "
             result = Branch.Withdraw(self,i['money'])
-#            branchmsg = branchmsg + "\"" + result + "\"}, {\"interface\": "
         elif i['interface'] == 'query':
                 bal = Branch.Query(self)
-#                branchmsg = branchmsg + "\"query\", \"result\": \"success\", \"money\": " + str(bal) +"}]},"
                 branchmsg = str(bal)
         return bankworld_pb2.BranchReply(branch_msg=branchmsg)
 

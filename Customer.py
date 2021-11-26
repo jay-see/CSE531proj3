@@ -41,3 +41,5 @@ class Customer:
             response = self.stubList[branchid-1].MsgDelivery(bankworld_pb2.BranchRequest(msg=singleevent))
         msg += response.branch_msg + "\n },"
         return (msg)
+
+
