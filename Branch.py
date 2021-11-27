@@ -113,8 +113,6 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         return bankworld_pb2.BranchReply(branch_msg=branchmsg)
 
 
-#serverlist = list()
-#bankbranch = list()
 p = list()
 count = 0
 #index = 0
