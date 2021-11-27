@@ -95,14 +95,21 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         branchmsg = ""
         request.msg = request.msg.replace("\'", "\"")
 
-        i = json.loads(request.msg)
-        if i['interface'] == 'deposit':
-            result = Branch.Deposit(self,i['money'])
-        elif i['interface'] == 'withdraw':
-            result = Branch.Withdraw(self,i['money'])
-        elif i['interface'] == 'query':
+        reqmsg = json.loads(request.msg)
+        for i in reqmsg:
+            if i['interface'] == 'deposit':
+                result = Branch.Deposit(self,i['money'])
+                branchmsg = "deposited " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
+                print ("BRANCHMESSAGE: " + branchmsg)
+            elif i['interface'] == 'withdraw':
+                result = Branch.Withdraw(self,i['money'])
+                branchmsg = "withdrew " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
+                print ("BRANCHMESSAGE: " + branchmsg)
+            elif i['interface'] == 'query':
                 bal = Branch.Query(self)
-                branchmsg = str(bal)
+                branchmsg = "queried " + str(bal) + " at branch " + str(self.id)
+                print ("BRANCHMESSAGE: " + branchmsg)
+        print (branchmsg)
         return bankworld_pb2.BranchReply(branch_msg=branchmsg)
 
 

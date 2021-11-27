@@ -1,8 +1,11 @@
 [
  {
- "id": 1, "balance": 200
+ "id": 1, "balance": queried 200 at branch 1
+ },deposited 10 balance = 410 at branch 2
+ },deposited 10 balance = 600 at branch 3
  },
  {
- "id": 2, "balance": 200
+ "id": 2, "balance": withdrew 100 balance = 500 at branch 1
+ },queried 600 at branch 2
  }
 ]
