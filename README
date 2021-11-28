@@ -17,5 +17,5 @@ python3 main.py rw
 for read your writes input file
 
 
-The input file must be called "input.json"
-The output file will be called "output.json"
+The input file must be called "input.json" and in the same path
+The output file will be called "output.json" and in the same path
