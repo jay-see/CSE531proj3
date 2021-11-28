@@ -1,5 +1,8 @@
 [
  {
- "id": 1, "balance": queried 200 at branch 1
+ "id": 1, "balance": 400
  },
+ {
+ "id": 1, "balance": 900
  },
+]

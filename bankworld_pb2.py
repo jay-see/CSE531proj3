@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x62\x61nkworld.proto\x12\tbankworld\"\x1c\n\rBranchRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"!\n\x0b\x42ranchReply\x12\x12\n\nbranch_msg\x18\x01 \x01(\t\"\x1e\n\x0fWithdrawRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"%\n\rWithdrawReply\x12\x14\n\x0cwithdraw_msg\x18\x01 \x01(\t\"\x1d\n\x0e\x44\x65positRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"#\n\x0c\x44\x65positReply\x12\x13\n\x0b\x64\x65posit_msg\x18\x01 \x01(\t\"\x1c\n\x08StubDone\x12\x10\n\x08stub_msg\x18\x01 \x01(\t\"\x1f\n\tStubEvent\x12\x12\n\nstub_event\x18\x01 \x01(\t2\x83\x01\n\x08\x43ustomer\x12\x39\n\ncreateStub\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x12<\n\rexecuteEvents\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x32\x9f\x02\n\x06\x42ranch\x12\x39\n\ncreateStub\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x12\x41\n\x0bMsgDelivery\x12\x18.bankworld.BranchRequest\x1a\x16.bankworld.BranchReply\"\x00\x12L\n\x12Propagate_Withdraw\x12\x1a.bankworld.WithdrawRequest\x1a\x18.bankworld.WithdrawReply\"\x00\x12I\n\x11Propagate_Deposit\x12\x19.bankworld.DepositRequest\x1a\x17.bankworld.DepositReply\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0f\x62\x61nkworld.proto\x12\tbankworld\"\x1c\n\rBranchRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"!\n\x0b\x42ranchReply\x12\x12\n\nbranch_msg\x18\x01 \x01(\t\"\x1d\n\x0e\x42\x61lanceRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"\x1f\n\x0c\x42\x61lanceReply\x12\x0f\n\x07get_msg\x18\x01 \x01(\t\"\x1c\n\x08StubDone\x12\x10\n\x08stub_msg\x18\x01 \x01(\t\"\x1f\n\tStubEvent\x12\x12\n\nstub_event\x18\x01 \x01(\t2\x83\x01\n\x08\x43ustomer\x12\x39\n\ncreateStub\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x12<\n\rexecuteEvents\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x32\xcb\x01\n\x06\x42ranch\x12\x39\n\ncreateStub\x12\x14.bankworld.StubEvent\x1a\x13.bankworld.StubDone\"\x00\x12\x41\n\x0bMsgDelivery\x12\x18.bankworld.BranchRequest\x1a\x16.bankworld.BranchReply\"\x00\x12\x43\n\x0bGet_Balance\x12\x19.bankworld.BalanceRequest\x1a\x17.bankworld.BalanceReply\"\x00\x62\x06proto3'
 )
 
 
@@ -89,16 +89,16 @@ _BRANCHREPLY = _descriptor.Descriptor(
 )
 
 
-_WITHDRAWREQUEST = _descriptor.Descriptor(
-  name='WithdrawRequest',
-  full_name='bankworld.WithdrawRequest',
+_BALANCEREQUEST = _descriptor.Descriptor(
+  name='BalanceRequest',
+  full_name='bankworld.BalanceRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='msg', full_name='bankworld.WithdrawRequest.msg', index=0,
+      name='msg', full_name='bankworld.BalanceRequest.msg', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -117,20 +117,20 @@ _WITHDRAWREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=95,
-  serialized_end=125,
+  serialized_end=124,
 )
 
 
-_WITHDRAWREPLY = _descriptor.Descriptor(
-  name='WithdrawReply',
-  full_name='bankworld.WithdrawReply',
+_BALANCEREPLY = _descriptor.Descriptor(
+  name='BalanceReply',
+  full_name='bankworld.BalanceReply',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='withdraw_msg', full_name='bankworld.WithdrawReply.withdraw_msg', index=0,
+      name='get_msg', full_name='bankworld.BalanceReply.get_msg', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -148,72 +148,8 @@ _WITHDRAWREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=127,
-  serialized_end=164,
-)
-
-
-_DEPOSITREQUEST = _descriptor.Descriptor(
-  name='DepositRequest',
-  full_name='bankworld.DepositRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='msg', full_name='bankworld.DepositRequest.msg', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=166,
-  serialized_end=195,
-)
-
-
-_DEPOSITREPLY = _descriptor.Descriptor(
-  name='DepositReply',
-  full_name='bankworld.DepositReply',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='deposit_msg', full_name='bankworld.DepositReply.deposit_msg', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=197,
-  serialized_end=232,
+  serialized_start=126,
+  serialized_end=157,
 )
 
 
@@ -244,8 +180,8 @@ _STUBDONE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=234,
-  serialized_end=262,
+  serialized_start=159,
+  serialized_end=187,
 )
 
 
@@ -276,16 +212,14 @@ _STUBEVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=264,
-  serialized_end=295,
+  serialized_start=189,
+  serialized_end=220,
 )
 
 DESCRIPTOR.message_types_by_name['BranchRequest'] = _BRANCHREQUEST
 DESCRIPTOR.message_types_by_name['BranchReply'] = _BRANCHREPLY
-DESCRIPTOR.message_types_by_name['WithdrawRequest'] = _WITHDRAWREQUEST
-DESCRIPTOR.message_types_by_name['WithdrawReply'] = _WITHDRAWREPLY
-DESCRIPTOR.message_types_by_name['DepositRequest'] = _DEPOSITREQUEST
-DESCRIPTOR.message_types_by_name['DepositReply'] = _DEPOSITREPLY
+DESCRIPTOR.message_types_by_name['BalanceRequest'] = _BALANCEREQUEST
+DESCRIPTOR.message_types_by_name['BalanceReply'] = _BALANCEREPLY
 DESCRIPTOR.message_types_by_name['StubDone'] = _STUBDONE
 DESCRIPTOR.message_types_by_name['StubEvent'] = _STUBEVENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -304,33 +238,19 @@ BranchReply = _reflection.GeneratedProtocolMessageType('BranchReply', (_message.
   })
 _sym_db.RegisterMessage(BranchReply)
 
-WithdrawRequest = _reflection.GeneratedProtocolMessageType('WithdrawRequest', (_message.Message,), {
-  'DESCRIPTOR' : _WITHDRAWREQUEST,
+BalanceRequest = _reflection.GeneratedProtocolMessageType('BalanceRequest', (_message.Message,), {
+  'DESCRIPTOR' : _BALANCEREQUEST,
   '__module__' : 'bankworld_pb2'
-  # @@protoc_insertion_point(class_scope:bankworld.WithdrawRequest)
+  # @@protoc_insertion_point(class_scope:bankworld.BalanceRequest)
   })
-_sym_db.RegisterMessage(WithdrawRequest)
+_sym_db.RegisterMessage(BalanceRequest)
 
-WithdrawReply = _reflection.GeneratedProtocolMessageType('WithdrawReply', (_message.Message,), {
-  'DESCRIPTOR' : _WITHDRAWREPLY,
+BalanceReply = _reflection.GeneratedProtocolMessageType('BalanceReply', (_message.Message,), {
+  'DESCRIPTOR' : _BALANCEREPLY,
   '__module__' : 'bankworld_pb2'
-  # @@protoc_insertion_point(class_scope:bankworld.WithdrawReply)
+  # @@protoc_insertion_point(class_scope:bankworld.BalanceReply)
   })
-_sym_db.RegisterMessage(WithdrawReply)
-
-DepositRequest = _reflection.GeneratedProtocolMessageType('DepositRequest', (_message.Message,), {
-  'DESCRIPTOR' : _DEPOSITREQUEST,
-  '__module__' : 'bankworld_pb2'
-  # @@protoc_insertion_point(class_scope:bankworld.DepositRequest)
-  })
-_sym_db.RegisterMessage(DepositRequest)
-
-DepositReply = _reflection.GeneratedProtocolMessageType('DepositReply', (_message.Message,), {
-  'DESCRIPTOR' : _DEPOSITREPLY,
-  '__module__' : 'bankworld_pb2'
-  # @@protoc_insertion_point(class_scope:bankworld.DepositReply)
-  })
-_sym_db.RegisterMessage(DepositReply)
+_sym_db.RegisterMessage(BalanceReply)
 
 StubDone = _reflection.GeneratedProtocolMessageType('StubDone', (_message.Message,), {
   'DESCRIPTOR' : _STUBDONE,
@@ -355,8 +275,8 @@ _CUSTOMER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=298,
-  serialized_end=429,
+  serialized_start=223,
+  serialized_end=354,
   methods=[
   _descriptor.MethodDescriptor(
     name='createStub',
@@ -391,8 +311,8 @@ _BRANCH = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=432,
-  serialized_end=719,
+  serialized_start=357,
+  serialized_end=560,
   methods=[
   _descriptor.MethodDescriptor(
     name='createStub',
@@ -415,22 +335,12 @@ _BRANCH = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='Propagate_Withdraw',
-    full_name='bankworld.Branch.Propagate_Withdraw',
+    name='Get_Balance',
+    full_name='bankworld.Branch.Get_Balance',
     index=2,
     containing_service=None,
-    input_type=_WITHDRAWREQUEST,
-    output_type=_WITHDRAWREPLY,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
-    name='Propagate_Deposit',
-    full_name='bankworld.Branch.Propagate_Deposit',
-    index=3,
-    containing_service=None,
-    input_type=_DEPOSITREQUEST,
-    output_type=_DEPOSITREPLY,
+    input_type=_BALANCEREQUEST,
+    output_type=_BALANCEREPLY,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

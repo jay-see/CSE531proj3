@@ -14,14 +14,14 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         self.id = id
         # replica of the Branch's balance
         self.balance = balance
+        # balance version number
+        self.version = 0
         # the list of process IDs of the branches
         self.branches = branches
         # the list of Client stubs to communicate with the branches
         self.stubList = list()
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
-        # event tracking number
-        self.currentevent = 1
         # iterate the processID of the branches
 
     # TODO: students are expected to process requests from both Client and Branch
@@ -38,57 +38,74 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         return ("Done creating BRANCH stubsss!!")
 
     # add the deposit amount to this branch's balance
-    def Propagate_Deposit(self, amount, context):
-        new_bal = self.balance + int(amount.msg)
-
-        if new_bal >= 0:
-            self.balance = new_bal
-            depositmsg = "success"
+    def Get_Balance(self, newversion, context):
+#        new_bal = self.balance + int(amount.msg)
+        print ("NEWVERSION VERSION: " + newversion.msg + " " + self.version)
+        if (int(newversion.msg) >= int(self.version)):
+#        self.balance = new_bal
+            getmsg = str(self.balance)
         else :
-            depositmsg = "fail"
-        return bankworld_pb2.DepositReply(deposit_msg=depositmsg)
+            getmsg = "fail"
+        return bankworld_pb2.BalanceReply(get_msg=getmsg)
 
     # subtract the withdrawal amount from this branch's balance
-    def Propagate_Withdraw(self, amount, context):
-        new_bal = self.balance - int(amount.msg)
+#    def Get_Withdraw(self, amount, context):
+#        new_bal = self.balance - int(amount.msg)
 
-        if new_bal >= 0:
-            self.balance = new_bal
-            withdrawmsg = "success"
-        else :
-            withdrawmsg = "fail"
-        return bankworld_pb2.WithdrawReply(withdraw_msg=withdrawmsg)
+#        if new_bal >= 0:
+#            self.balance = new_bal
+#            withdrawmsg = "success"
+#        else :
+#            withdrawmsg = "fail"
+#        return bankworld_pb2.WithdrawReply(withdraw_msg=withdrawmsg)
 
     # return balance
-    def Query(self):
-
+    def Query(self, readset):
+        [prevbranch,currentversion] = readset.split(':')
+        if (int(prevbranch) != self.id) & (int(prevbranch) != 0) :
+            response = self.stubList[int(prevbranch)-1].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(currentversion)))
+            print ("RESPONSE IS " + response.get_msg)
+            self.balance = int(response.get_msg)
+        if (int(self.version) > int(currentversion)):
+            print ("ERROR: INPUT NOT CLIENT-CONSISTENT - Branch: " + str(self.id) + " branch version: " + str(self.version) + " client read version: " + currentversion)
         return self.balance
 
     # add deposit amount to this branch balance and then use branch stubs to send the transaction to all other branches
-    def Deposit(self, amount):
+    def Deposit(self, amount, writeset):
+        [prevbranch, currentversion] = writeset.split(':')
+        if (int(prevbranch) != self.id) & (int(prevbranch) != 0) :
+            response = self.stubList[int(prevbranch)-1].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(currentversion)))
+            print ("RESPONSE IS " + response.get_msg)
+            self.balance = int(response.get_msg)
         new_bal = self.balance + amount
         if new_bal >= 0:
             self.balance = new_bal
+            self.version = currentversion
+#            for i in range(len(self.stubList)) :
+#                if (i+1) != self.id :
+#                    response = self.stubList[i].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(amount)))
 
-            for i in range(len(self.stubList)) :
-                if (i+1) != self.id :
-                    response = self.stubList[i].Propagate_Deposit(bankworld_pb2.DepositRequest(msg=str(amount)))
-
-            return (response.deposit_msg)
+            return "success"
         else:
             return "fail"
 
     # subtract withdrawal amount from this branch balance and then use branch stubs to send the transaction to all other branches
-    def Withdraw(self, amount):
+    def Withdraw(self, amount, writeset):
+        [prevbranch, currentversion] = writeset.split(':')
+        if (int(prevbranch) != self.id) & (int(prevbranch) != 0) :
+            response = self.stubList[int(prevbranch)-1].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(currentversion)))
+            print ("RESPONSE IS " + response.get_msg)
+            self.balance = int(response.get_msg)
         new_bal = self.balance - amount
         if new_bal >= 0:
             self.balance = new_bal
+            self.version = currentversion
 
-            for i in range(len(self.stubList)) :
-                if (i+1) != self.id :
-                    response = self.stubList[i].Propagate_Withdraw(bankworld_pb2.WithdrawRequest(msg=str(amount)))
+#            for i in range(len(self.stubList)) :
+#                if (i+1) != self.id :
+#                    response = self.stubList[i].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(amount)))
 
-            return (response.withdraw_msg)
+            return "success"
         else:
             return "fail"
 
@@ -97,34 +114,21 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         branchmsg = ""
         request.msg = request.msg.replace("\'", "\"")
 
-        reqmsg = json.loads(request.msg)
-        for i in reqmsg:
-            if i['interface'] == 'deposit':
-                self.currentevent += 1
-                result = Branch.Deposit(self,i['money'])
-                branchmsg = "deposited " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
-                print ("BRANCHMESSAGE: " + branchmsg)
-            elif i['interface'] == 'withdraw':
-                self.currentevent += 1
-                result = Branch.Withdraw(self,i['money'])
-                branchmsg = "withdrew " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
-                print ("BRANCHMESSAGE: " + branchmsg)
-            elif i['interface'] == 'query':
-                # do nothing but wait until eventnum = currentevent
-                while True:
-                    if (i['eventnum'] > self.currentevent):                   
-                        break
-                self.currentevent += 1
-                bal = Branch.Query(self)
-                branchmsg = "queried " + str(bal) + " at branch " + str(self.id)
-                print ("BRANCHMESSAGE: " + branchmsg + " EVENTNUM: " + str(i['eventnum']) + " CURRENTEVENT: " + str(self.currentevent))
-        print (branchmsg)
+        i = json.loads(request.msg)
+        if i['interface'] == 'deposit':
+            result = Branch.Deposit(self, i['money'], i['WriteSet'])
+            print ("deposited " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id) + " WriteSet: " + i['WriteSet'] + " ReadSet: " + i['ReadSet'])
+        elif i['interface'] == 'withdraw':
+            result = Branch.Withdraw(self,i['money'], i['WriteSet'])
+            print ("withdrew " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id) + " WriteSet: " + i['WriteSet'] + " ReadSet: " + i['ReadSet'])
+        elif i['interface'] == 'query':            
+            bal = Branch.Query(self, i['ReadSet'])
+            branchmsg = str(bal)
+            print ("queried " + str(bal) + " at branch " + str(self.id) + " WriteSet: " + i['WriteSet'] + " ReadSet: " + i['ReadSet'])
         return bankworld_pb2.BranchReply(branch_msg=branchmsg)
-
 
 p = list()
 count = 0
-#index = 0
 
 # instantiate all Branch objects, create branch stubs over ports 50051 to 50050+id
 def Serve(id, balance, branches):

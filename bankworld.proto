@@ -27,8 +27,7 @@ service Customer {
 service Branch {
   rpc createStub (StubEvent) returns (StubDone) {}
   rpc MsgDelivery (BranchRequest) returns (BranchReply) {}
-  rpc Propagate_Withdraw (WithdrawRequest) returns (WithdrawReply) {}
-  rpc Propagate_Deposit (DepositRequest) returns (DepositReply) {}
+  rpc Get_Balance (BalanceRequest) returns (BalanceReply) {}
 }
 
 // The request message containing the user's name.
@@ -42,24 +41,24 @@ message BranchReply {
 }
 
 // The request message containing the user's name.
-message WithdrawRequest {
+message BalanceRequest {
   string msg = 1;
 }
 
 // The response message containing the greetings
-message WithdrawReply {
-  string withdraw_msg = 1;
+message BalanceReply {
+  string get_msg = 1;
 }
 
 // The request message containing the user's name.
-message DepositRequest {
-  string msg = 1;
-}
+//message DepositRequest {
+//  string msg = 1;
+//}
 
 // The response message containing the greetings
-message DepositReply {
-  string deposit_msg = 1;
-}
+//message DepositReply {
+//  string deposit_msg = 1;
+//}
 
 message StubDone {
   string stub_msg = 1;

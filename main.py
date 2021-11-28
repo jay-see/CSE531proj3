@@ -8,15 +8,15 @@ from Customer import Customer
 from multiprocessing import Process
 import time
 import threading
+import sys
 
 finalmsg = ""
-
     
 # instantiate Customer object, create stub, and execute Events
 def Cust(custid, custevents, numbranches):
     global finalmsg
     
-    cust = Customer(custid, custevents)
+    cust = Customer(custid, custevents, input_type)
     out = cust.createStub(numbranches)
 
     finalmsg = cust.executeEvents()
@@ -31,6 +31,9 @@ def Cust(custid, custevents, numbranches):
 f = open('input.json',)
 data = json.load(f)
 
+# get argument: "mw" is monotonic writes, "rw" or anything else is read your writes
+input_type = sys.argv[1]
+print (input_type)
 p = list()
 
 # main function
@@ -51,11 +54,6 @@ if __name__ == '__main__':
     for i in data:
         if (i['type'] == 'customer') | (i['type'] == 'client'):
             Cust(i['id'], str(i['events']),count,)
-#            proc = Process(target=Cust, args=(i['id'], str(i['events']),))
-#            proc.start()
-#            p.append(proc)
-#    for proc in p:
-#        proc.join()    
 
     with open("output.json", "a") as thefile:
 # add closing bracket

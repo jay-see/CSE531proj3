@@ -121,15 +121,10 @@ class BranchStub(object):
                 request_serializer=bankworld__pb2.BranchRequest.SerializeToString,
                 response_deserializer=bankworld__pb2.BranchReply.FromString,
                 )
-        self.Propagate_Withdraw = channel.unary_unary(
-                '/bankworld.Branch/Propagate_Withdraw',
-                request_serializer=bankworld__pb2.WithdrawRequest.SerializeToString,
-                response_deserializer=bankworld__pb2.WithdrawReply.FromString,
-                )
-        self.Propagate_Deposit = channel.unary_unary(
-                '/bankworld.Branch/Propagate_Deposit',
-                request_serializer=bankworld__pb2.DepositRequest.SerializeToString,
-                response_deserializer=bankworld__pb2.DepositReply.FromString,
+        self.Get_Balance = channel.unary_unary(
+                '/bankworld.Branch/Get_Balance',
+                request_serializer=bankworld__pb2.BalanceRequest.SerializeToString,
+                response_deserializer=bankworld__pb2.BalanceReply.FromString,
                 )
 
 
@@ -148,13 +143,7 @@ class BranchServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Propagate_Withdraw(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Propagate_Deposit(self, request, context):
+    def Get_Balance(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -173,15 +162,10 @@ def add_BranchServicer_to_server(servicer, server):
                     request_deserializer=bankworld__pb2.BranchRequest.FromString,
                     response_serializer=bankworld__pb2.BranchReply.SerializeToString,
             ),
-            'Propagate_Withdraw': grpc.unary_unary_rpc_method_handler(
-                    servicer.Propagate_Withdraw,
-                    request_deserializer=bankworld__pb2.WithdrawRequest.FromString,
-                    response_serializer=bankworld__pb2.WithdrawReply.SerializeToString,
-            ),
-            'Propagate_Deposit': grpc.unary_unary_rpc_method_handler(
-                    servicer.Propagate_Deposit,
-                    request_deserializer=bankworld__pb2.DepositRequest.FromString,
-                    response_serializer=bankworld__pb2.DepositReply.SerializeToString,
+            'Get_Balance': grpc.unary_unary_rpc_method_handler(
+                    servicer.Get_Balance,
+                    request_deserializer=bankworld__pb2.BalanceRequest.FromString,
+                    response_serializer=bankworld__pb2.BalanceReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -228,7 +212,7 @@ class Branch(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Propagate_Withdraw(request,
+    def Get_Balance(request,
             target,
             options=(),
             channel_credentials=None,
@@ -238,25 +222,8 @@ class Branch(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/bankworld.Branch/Propagate_Withdraw',
-            bankworld__pb2.WithdrawRequest.SerializeToString,
-            bankworld__pb2.WithdrawReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def Propagate_Deposit(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/bankworld.Branch/Propagate_Deposit',
-            bankworld__pb2.DepositRequest.SerializeToString,
-            bankworld__pb2.DepositReply.FromString,
+        return grpc.experimental.unary_unary(request, target, '/bankworld.Branch/Get_Balance',
+            bankworld__pb2.BalanceRequest.SerializeToString,
+            bankworld__pb2.BalanceReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
