@@ -20,6 +20,8 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         self.stubList = list()
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
+        # event tracking number
+        self.currentevent = 1
         # iterate the processID of the branches
 
     # TODO: students are expected to process requests from both Client and Branch
@@ -59,7 +61,7 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
 
     # return balance
     def Query(self):
-#        time.sleep(3)
+
         return self.balance
 
     # add deposit amount to this branch balance and then use branch stubs to send the transaction to all other branches
@@ -98,17 +100,24 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         reqmsg = json.loads(request.msg)
         for i in reqmsg:
             if i['interface'] == 'deposit':
+                self.currentevent += 1
                 result = Branch.Deposit(self,i['money'])
                 branchmsg = "deposited " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
                 print ("BRANCHMESSAGE: " + branchmsg)
             elif i['interface'] == 'withdraw':
+                self.currentevent += 1
                 result = Branch.Withdraw(self,i['money'])
                 branchmsg = "withdrew " + str(i['money']) + " balance = " + str(self.balance) + " at branch " + str(self.id)
                 print ("BRANCHMESSAGE: " + branchmsg)
             elif i['interface'] == 'query':
+                # do nothing but wait until eventnum = currentevent
+                while True:
+                    if (i['eventnum'] > self.currentevent):                   
+                        break
+                self.currentevent += 1
                 bal = Branch.Query(self)
                 branchmsg = "queried " + str(bal) + " at branch " + str(self.id)
-                print ("BRANCHMESSAGE: " + branchmsg)
+                print ("BRANCHMESSAGE: " + branchmsg + " EVENTNUM: " + str(i['eventnum']) + " CURRENTEVENT: " + str(self.currentevent))
         print (branchmsg)
         return bankworld_pb2.BranchReply(branch_msg=branchmsg)
 
@@ -126,9 +135,6 @@ def Serve(id, balance, branches):
     
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10,))
     bankbranch = Branch(id, balance, branches)
-    print ("IIIIIIIIIDDDDDDDDDDDDDDDDDD = " + str(id))
-    print ("SERVERLIST = " + str(server))
-    print ("BANKBRANCH = " + str(bankbranch))
     bankworld_pb2_grpc.add_BranchServicer_to_server(bankbranch, server)
 
     server.add_insecure_port('[::]:'+str(channelnumber))

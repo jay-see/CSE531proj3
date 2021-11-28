@@ -32,8 +32,8 @@ class Customer:
         return ("Done creating CLIENT stub " + str(channelnumber))
 
     # execute stub commands at a branch
-    def runEvents(self, id, events, queue):
-        response = self.stubList[id].MsgDelivery(bankworld_pb2.BranchRequest(msg=events))
+    def runWriteSets(self, id, writeset, queue):
+        response = self.stubList[id].MsgDelivery(bankworld_pb2.BranchRequest(msg=writeset))
         queue.put(response.branch_msg + "\n },")
         message = response.branch_msg + "\n },"
         print ("MESSAGE = " + message)
@@ -42,13 +42,16 @@ class Customer:
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
         print ("Executing events.." + self.events)
+        eventcounter = 0
         msg = " {\n \"id\": " + str(self.id) + ", \"balance\": "
         
         newevents = self.events.replace("\'", "\"")
         eventslist = json.loads(newevents)
 
-        # send each event to the proper destination branch
+        # create WriteSet for each branch
         for x in eventslist:
+            eventcounter += 1
+            x['eventnum'] = eventcounter
             singleevent = str(x)
             branchid = x['dest']
             self.WriteSet[branchid-1] += singleevent + ","
@@ -58,16 +61,16 @@ class Customer:
                 self.WriteSet[y] = self.WriteSet[y][:-1] + "]"
                 line = self.WriteSet[y].replace("\'", "\"")
                 jsonline = json.loads(line)
-                proc = Process(target=Customer.runEvents, args=(self, y, str(jsonline), self.pqueue,))
+                proc = Process(target=Customer.runWriteSets, args=(self, y, str(jsonline), self.pqueue,))
                 proc.start()
                 self.p.append(proc)
-                msg += self.pqueue.get() + "\n },"
+#                msg += self.pqueue.get() + "\n },"
         for proc in self.p:
             proc.join()
 #            Customer.runEvent(self, branchid, singleevent)
 #                response = self.stubList[y].MsgDelivery(bankworld_pb2.BranchRequest(msg=str(jsonline)))
 #            print (self.pqueue.get())
-#        msg += self.pqueue.get() + "\n },"
+        msg += self.pqueue.get() + "\n },"
         print ("ENDMESSAGE is " + msg)
 
         return (msg)
