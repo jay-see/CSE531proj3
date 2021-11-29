@@ -21,11 +21,8 @@ def Cust(custid, custevents, numbranches):
 
     finalmsg = cust.executeEvents()
     # print to string
-#    print (out)
     with open("output.json", "a") as thefile:
- #       print ("PRINTING TO FILE = " + finalmsg)
         thefile.write("\n" + finalmsg)
- #   content += finalmsg
  
 # Opening JSON file
 f = open('input.json',)
@@ -33,7 +30,7 @@ data = json.load(f)
 
 # get argument: "mw" is monotonic writes, "rw" or anything else is read your writes
 input_type = sys.argv[1]
-print (input_type)
+
 p = list()
 
 # main function

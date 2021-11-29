@@ -19,19 +19,16 @@ class Customer:
 
     # TODO: students are expected to create the Customer stub
     def createStub(self, numbranches):
-        print (numbranches)
         for i in range(numbranches):
             channelnumber = 50050+i+1
             channel = grpc.insecure_channel('localhost:'+str(channelnumber))
             self.stubList.append(bankworld_pb2_grpc.BranchStub(channel))
-            print ("Done creating CLIENT stub " + str(channelnumber))
         return ("Done creating CLIENT stub " + str(channelnumber))
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
         version = 0
         msg = ""
-        print ("Executing events.." + self.events)
         if self.input_type != "mw":
             msg = " {\n \"id\": " + str(self.id) + ", \"balance\": ["
         previousbranch = 0
@@ -50,7 +47,6 @@ class Customer:
             singleevent = str(x)
             branchid = x['dest']
             previousbranch = branchid
-            print (singleevent)
             response = self.stubList[branchid-1].MsgDelivery(bankworld_pb2.BranchRequest(msg=singleevent))
             if (x['interface'] == 'query'):
                 if self.input_type == "mw":

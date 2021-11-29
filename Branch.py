@@ -50,8 +50,8 @@ class Branch(bankworld_pb2_grpc.BranchServicer):
         if (int(prevbranch) != self.id) & (int(prevbranch) != 0) :
             response = self.stubList[int(prevbranch)-1].Get_Balance(bankworld_pb2.BalanceRequest(msg=str(currentversion)))
             self.balance = int(response.get_msg)
-        if (int(self.version) > int(currentversion)):
-            pass
+        elif (int(self.version) > int(currentversion)):
+            print ("Warning: branch version is higher than client version")
         return self.balance
 
     # add deposit amount to this branch balance, but don't propagate it to any other branch until another branch calls the Get_Balance funtion
